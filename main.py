@@ -13,7 +13,6 @@ while True:
         client, addr = server.accept()
         message = client.recv(1024).decode()
 
-        print(message)
         sendMessage(message)
 
     except KeyboardInterrupt:
