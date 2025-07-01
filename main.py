@@ -25,7 +25,7 @@ def get_local_ip():
         s.close()
     return ip
 
-requests.post("http://127.0.0.1:5555/", data=get_local_ip())
+requests.post("http://192.168.0.219:5555/", data=get_local_ip())
 
 # --- Message Box function ---
 def send_message(msg):
