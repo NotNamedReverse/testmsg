@@ -29,7 +29,7 @@ requests.post("http://192.168.0.219:5555/", data=get_local_ip())
 
 # --- Message Box function ---
 def send_message(msg):
-    ctypes.windll.user32.MessageBoxW(0, msg, "Message", 0)
+    ctypes.windll.user32.MessageBoxW(0, msg, "Message", 0x40000)
 
 # --- TCP server ---
 def handle_client(client_socket):
