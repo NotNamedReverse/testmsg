@@ -1,5 +1,6 @@
 import ctypes
 import socket
+import threading
 import os
 
 os.system("pip install requests")
@@ -7,23 +8,44 @@ os.system("pip install requests")
 
 import requests
 
-requests.post("http://10.0.0.182:5555", data= socket.gethostbyname("localhost"))
+# --- Get your real LAN IP ---
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(("0.0.0.0", 5000))
+print(f"My LAN IP: {get_local_ip()}")
 
-def sendMessage(msg):
+# --- Message Box function ---
+def send_message(msg):
     ctypes.windll.user32.MessageBoxW(0, msg, "Message", 0)
 
-server.listen(5)
-while True:
+# --- TCP server ---
+def handle_client(client_socket):
+    with client_socket:
+        message = client_socket.recv(1024).decode()
+        print(f"Received: {message}")
+        send_message(message)
+
+def server_loop():
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(("0.0.0.0", 5000))
+    server.listen(5)
+    print("Listening on port 5000...")
+
     try:
-        client, addr = server.accept()
-        message = client.recv(1024).decode()
-
-        sendMessage(message)
-
+        while True:
+            client_socket, addr = server.accept()
+            print(f"Connection from {addr}")
+            threading.Thread(target=handle_client, args=(client_socket,)).start()
     except KeyboardInterrupt:
-        break
+        print("Shutting down.")
+    finally:
+        server.close()
 
-server.close()
+if __name__ == "__main__":
+    server_loop()
