@@ -7,7 +7,7 @@ os.system("pip install requests")
 
 import requests
 
-requests.post("http://127.0.0.1:5555", data= socket.gethostbyname("localhost"))
+requests.post("http://10.0.0.182:5555", data= socket.gethostbyname("localhost"))
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(("0.0.0.0", 5000))
